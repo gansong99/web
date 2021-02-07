@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="../lib/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <com1 v-bind:extendmsg="msg"></com1>
+    <!--父组件在调用子组件时候，可以通过数据绑定的形式，传值为子组件-->
+    <!--注意：绑定的方法或者属性名字不能是带有驼峰或者连字符的，可能是命令规范-->
+    <com1 @showcool="show"></com1>
+  </div>
+
+  <template id="app2">
+    <div>
+      <h3>vm实例的子组件 +++ {{ extendmsg }}</h3>
+      <input type="button" value="点击" @click="myclick">
+    </div>
+  </template>
+
+  <script>
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        msg: 'com1的父组件data属性的数据'
+      },
+      methods: {
+        show() {
+          console.log('成功调用了父组件的方法')
+        }
+      },
+      components: {
+        com1: {
+          template: '#app2',
+          props: ['extendmsg'],
+          //props:道具 只有绑定过后并在其中定义过，子组件才能使用父组件的某些属性   
+          //这里的数据，只可读不可写
+          methods: {
+            myclick() {
+              this.$emit('showcool')
+              //emit:触发，调用 通过这个完成template对于data的作用    
+            }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>
